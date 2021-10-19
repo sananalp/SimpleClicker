@@ -1,8 +1,12 @@
 using UnityEngine;
 
-abstract class Ball: MonoBehaviour
+abstract class Ball : MonoBehaviour
 {
     public float ballBlowSpeed;
     public float ballPopTime;
-    public Transform ballSize;
+    [HideInInspector] public float time;
+    [HideInInspector] public Transform ballSize;
+
+    public abstract void BlowUp();
+    public abstract void BlowOut();
 }

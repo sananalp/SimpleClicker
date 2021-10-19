@@ -1,25 +1,28 @@
 using UnityEngine;
 
-class BallBehaviour : Ball
+class BubbleBall : Ball
 {
-    public float time;
-
     void Start()
     {
-        ballBlowSpeed = 0.2f;
-        ballPopTime = 2.0f;
         ballSize = GetComponent<Transform>();
     }
-
     void Update()
+    {
+        BlowUp();
+    }
+    public override void BlowUp()
     {
         time += Time.deltaTime * ballBlowSpeed;
 
         if (ballPopTime > time)
         {
             ballSize.localScale = new Vector3(time, time);
-            
+
         }
-        else Destroy(gameObject);
+        else BlowOut();
+    }
+    public override void BlowOut()
+    {
+        Destroy(gameObject);
     }
 }

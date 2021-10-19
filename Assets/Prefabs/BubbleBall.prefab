@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 8666758913415852912}
   - component: {fileID: 5109361381449139558}
   - component: {fileID: 2219726619647039937}
-  - component: {fileID: -7740010444008546873}
+  - component: {fileID: 2560739588257186877}
   m_Layer: 0
-  m_Name: circle
+  m_Name: BubbleBall
   m_TagString: HitObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -97,7 +97,7 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 2.56
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-7740010444008546873
+--- !u!114 &2560739588257186877
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -110,6 +110,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ballBlowSpeed: 0.2
-  ballPopTime: 0
-  ballSize: {fileID: 0}
+  ballPopTime: 2
   time: 0
+  ballSize: {fileID: 0}
