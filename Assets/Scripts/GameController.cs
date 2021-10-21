@@ -5,8 +5,8 @@ using UnityEngine.UI;
 public class GameController : MonoBehaviour
 {
     [Header("Object properties")]
-    public GameObject ballPrefab;
-    List<GameObject> balls = new List<GameObject>();
+    [SerializeField] GameObject ballPrefab;
+    List<Ball> balls = new List<Ball>();
 
     [Header("Object spawn properties")]
     public Transform spawnParent;
@@ -18,12 +18,11 @@ public class GameController : MonoBehaviour
     [SerializeField] Text scoreText;
     [SerializeField] Button restartButton;
 
-    BubbleBall bubbleBall;
     int score;
     float xPos, yPos;
 
     void Start()
-    {        
+    {
         ScreenAlign();
         BallSpawn();
     }
@@ -48,7 +47,7 @@ public class GameController : MonoBehaviour
             NextLevel();
             BallSpawn();
         }
-        else if (spawnParent.childCount == 0)
+        else if (Ball.blowout)
         {
             GameOver();
         }
@@ -59,13 +58,17 @@ public class GameController : MonoBehaviour
         {
             spawnPoint = new Vector3(Random.Range(xPos,-xPos), Random.Range(yPos,-yPos), ballPrefab.transform.position.z);
 
-            balls.Add(Instantiate(ballPrefab, spawnPoint, Quaternion.identity, spawnParent));
+            var go = Instantiate(ballPrefab, spawnPoint, Quaternion.identity, spawnParent);
+            Ball bubbleBall = go.AddComponent<BubbleBall>();
+            bubbleBall.ballBlowSpeed = Random.Range(0.2f, 0.6f);
+            bubbleBall.ballPopSize = 2.0f;
+            balls.Add(bubbleBall);
         }
     }
     void BallDestroy(RaycastHit hit)
     {
         Destroy(hit.collider.gameObject);
-        balls.Remove(hit.collider.gameObject);
+        balls.Remove(hit.collider.GetComponent<Ball>());
     }
     void AddScore()
     {
@@ -90,6 +93,11 @@ public class GameController : MonoBehaviour
         scoreText.resizeTextMaxSize = 80;
         scoreText.text = $"Game Over!\nYour score: {score}";
         restartButton.gameObject.SetActive(true);
+
+        foreach(Ball ball in spawnParent.GetComponentsInChildren<BubbleBall>())
+        {
+            Destroy(ball.gameObject);
+        }
     }
     public void Restart()
     {
@@ -98,5 +106,6 @@ public class GameController : MonoBehaviour
         ballSpawnCount = 0;
         ShowScore();
         balls.Clear();
+        Ball.blowout = false;
     }
 }
