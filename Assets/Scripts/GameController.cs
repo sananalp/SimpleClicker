@@ -62,6 +62,7 @@ public class GameController : MonoBehaviour
             Ball bubbleBall = go.AddComponent<BubbleBall>();
             bubbleBall.ballBlowSpeed = Random.Range(0.2f, 0.6f);
             bubbleBall.ballPopSize = 2.0f;
+            bubbleBall.SetColor(new Color(Random.Range(0.1f, 0.9f), Random.Range(0.1f, 0.9f), Random.Range(0.1f, 0.9f)));
             balls.Add(bubbleBall);
         }
     }

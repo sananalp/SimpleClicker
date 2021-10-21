@@ -7,11 +7,13 @@ abstract class Ball : MonoBehaviour
     public float ballPopSize;
     private float currentSize;
     private Vector3 ballSize;
-    protected Transform ball;
+    private Transform ball;
+    private SpriteRenderer ballSprite;
 
     private void Awake()
     {
         ball = GetComponent<Transform>();
+        ballSprite = GetComponent<SpriteRenderer>();
     }
     protected void BlowUp()
     {
@@ -28,5 +30,9 @@ abstract class Ball : MonoBehaviour
     {
         Destroy(gameObject);
         blowout = true;
+    }
+    public void SetColor(Color color)
+    {
+        ballSprite.color = color;
     }
 }
