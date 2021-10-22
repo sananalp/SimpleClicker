@@ -7,12 +7,12 @@ abstract class Ball : MonoBehaviour
     public float ballPopSize;
     private float currentSize;
     private Vector3 ballSize;
-    private Transform ball;
+    private Transform ballTransform;
     private SpriteRenderer ballSprite;
 
     private void Awake()
     {
-        ball = GetComponent<Transform>();
+        ballTransform = GetComponent<Transform>();
         ballSprite = GetComponent<SpriteRenderer>();
     }
     protected void BlowUp()
@@ -22,7 +22,7 @@ abstract class Ball : MonoBehaviour
         if (ballPopSize > currentSize)
         {
             ballSize = new Vector3(currentSize, currentSize, currentSize);
-            ball.localScale = ballSize;
+            ballTransform.localScale = ballSize;
         }
         else BlowOut();
     }

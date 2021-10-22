@@ -4,30 +4,27 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
-    [Header("Object properties")]
-    [SerializeField] GameObject ballPrefab;
+    [Header("Player properties")]
+    [SerializeField] private int ballSpawnCount;
+    [SerializeField] private float spawnOffset;
+    private int score;
+    private float xPos, yPos;
+
+    [Header("Ball properties")]
+    [SerializeField] private GameObject ballPrefab;
+    [SerializeField] private AudioSource ballPopSound;
     List<Ball> balls = new List<Ball>();
 
-    [Header("Object spawn properties")]
-    public Transform spawnParent;
-    Vector3 spawnPoint;
-    public int ballSpawnCount;
-    public float spawnOffset;
+    [Header("Spawn properties")]
+    [SerializeField] private Transform spawnParent;
+    private Vector3 spawnPoint;
 
-    [Header("UI Elements")]
-    [SerializeField] Text scoreText;
-    [SerializeField] Button restartButton;
+    [Header("UI elements")]
+    [SerializeField] private Text scoreText;
+    [SerializeField] private Button restartButton;
+    [SerializeField] private Button playButton;
 
-    int score;
-    float xPos, yPos;
-
-    void Start()
-    {
-        ScreenAlign();
-        BallSpawn();
-    }
-
-    void Update()
+    private void Update()
     {
         if (Input.GetMouseButtonUp(0))
         {
@@ -42,7 +39,7 @@ public class GameController : MonoBehaviour
             }
         }
 
-        if (balls.Count == 0)
+        if (balls.Count == 0 && scoreText.IsActive())
         {
             NextLevel();
             BallSpawn();
@@ -52,7 +49,8 @@ public class GameController : MonoBehaviour
             GameOver();
         }
     }
-    void BallSpawn()
+
+    private void BallSpawn()
     {
         for (int i = 0; i < ballSpawnCount; i++)
         {
@@ -66,30 +64,31 @@ public class GameController : MonoBehaviour
             balls.Add(bubbleBall);
         }
     }
-    void BallDestroy(RaycastHit hit)
+    private void BallDestroy(RaycastHit hit)
     {
         Destroy(hit.collider.gameObject);
         balls.Remove(hit.collider.GetComponent<Ball>());
+        ballPopSound.Play();
     }
-    void AddScore()
+    private void AddScore()
     {
         score++;
     }
-    void ShowScore()
+    private void ShowScore()
     {
         scoreText.resizeTextMaxSize = 200;
         scoreText.text = score.ToString();
     }
-    void NextLevel()
+    private void NextLevel()
     {
         ballSpawnCount++;
     }
-    void ScreenAlign()
+    private void ScreenAlign()
     {
         xPos = ((float)Screen.width / (float)Screen.height) * Camera.main.orthographicSize - spawnOffset;
         yPos = Camera.main.orthographicSize - spawnOffset;
     }
-    void GameOver()
+    private void GameOver()
     {
         scoreText.resizeTextMaxSize = 80;
         scoreText.text = $"Game Over!\nYour score: {score}";
@@ -108,5 +107,12 @@ public class GameController : MonoBehaviour
         ShowScore();
         balls.Clear();
         Ball.blowout = false;
+    }
+    public void Play()
+    {
+        scoreText.gameObject.SetActive(true);
+        playButton.gameObject.SetActive(false);
+        ScreenAlign();
+        BallSpawn();
     }
 }
