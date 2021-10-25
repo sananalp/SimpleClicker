@@ -442,10 +442,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e5fe895d32ca3744b32727614a2ce25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ballSpawnCount: 0
-  spawnOffset: 5
+  playerCamera: {fileID: 1071385512}
   ballPrefab: {fileID: 4784525691202031856, guid: 10e386f1ccd72d941b925f7779b7aadd, type: 3}
   ballPopSound: {fileID: 1964370802}
+  ballSpawnCount: 0
+  spawnOffset: 5
   spawnParent: {fileID: 1592669126}
   scoreText: {fileID: 640863356}
   restartButton: {fileID: 239930644}
