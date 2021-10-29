@@ -1,10 +1,12 @@
 using System.Collections;
 using UnityEngine;
 
-class BubbleBall : MonoBehaviour
+public class BubbleBall : MonoBehaviour
 {
+    static public bool SizeOut { get; set; }
     public float BlowSpeed { get; set; }
     public float PopSize { get; set; }
+    public Color Color { get { return ballSprite.color; } set { ballSprite.color = value; } }
 
     private float currentSize;
     private Vector3 ballSize;
@@ -15,12 +17,9 @@ class BubbleBall : MonoBehaviour
     {
         ballTransform = GetComponent<Transform>();
         ballSprite = GetComponent<SpriteRenderer>();
+        StartCoroutine(BlowCoroutine());
     }
-    private void Start()
-    {
-        StartCoroutine("BlowCoroutine");
-    }
-    public void BlowUp()
+    private void Inflate()
     {
         currentSize += Time.deltaTime * BlowSpeed;
 
@@ -29,15 +28,7 @@ class BubbleBall : MonoBehaviour
             ballSize = Vector3.one * currentSize;
             ballTransform.localScale = ballSize;
         }
-        else BlowOut();
-    }
-    public void BlowOut()
-    {
-        Destroy(gameObject);
-    }
-    public void SetColor(Color color)
-    {
-        ballSprite.color = color;
+        else SizeOut = true;
     }
 
     IEnumerator BlowCoroutine()
@@ -45,7 +36,7 @@ class BubbleBall : MonoBehaviour
         while (true)
         {
             yield return null;
-            BlowUp();
+            Inflate();
         }
     }
 }
