@@ -20,6 +20,7 @@ public class Player : MonoBehaviour
         if (Physics.Raycast(ray, out hit) && hit.collider.TryGetComponent(out BubbleBall ball))
         {
             gameController.PopBall(ball);
+            gameController.PopEffect(ball);
             gameController.AddScore();
             gameController.ShowScore();
         }

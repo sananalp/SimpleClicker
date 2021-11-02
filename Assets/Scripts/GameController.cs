@@ -12,10 +12,10 @@ public class GameController : MonoBehaviour
     private SpawnManager spawnManager;
 
     [Header("Spawn properties")]
+    [SerializeField] private GameObject ballPrefab;
+    [SerializeField] private Transform spawnParent;
     [SerializeField] private int ballSpawnCount;
     [SerializeField] private float spawnOffset;
-    [SerializeField] private Transform spawnParent;
-    [SerializeField] private GameObject ballPrefab;
 
     [Header("UI elements")]
     [SerializeField] private Text scoreText;
@@ -24,6 +24,9 @@ public class GameController : MonoBehaviour
 
     [Header("Audio elements")]
     [SerializeField] private AudioSource ballPopSound;
+
+    [Header("VFX Elements")]
+    [SerializeField] private ParticleSystem ballPopParticle;
 
     private void Start()
     {
@@ -36,14 +39,19 @@ public class GameController : MonoBehaviour
         {
             NextLevel();
             spawnManager.BallSpawn(ballPrefab, spawnParent, ballSpawnCount);
-            Debug.Log("Next Level");
         }
 
         else if (BubbleBall.SizeOut)
         {
             GameOver();
-            Debug.Log("Game Over");
         }
+    }
+    public void PopEffect(BubbleBall ball)
+    {
+        var particle = Instantiate(ballPopParticle, ball.transform.position, Quaternion.identity);
+        var particleMain = particle.main;
+        particleMain.startColor = ball.Color;
+        particle.Play();
     }
     public void PopBall(BubbleBall ball)
     {

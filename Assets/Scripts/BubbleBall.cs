@@ -7,11 +7,11 @@ public class BubbleBall : MonoBehaviour
     public float BlowSpeed { get; set; }
     public float PopSize { get; set; }
     public Color Color { get { return ballSprite.color; } set { ballSprite.color = value; } }
+    public Transform ballTransform { get; private set; }
+    public SpriteRenderer ballSprite { get; private set; }
 
     private float currentSize;
     private Vector3 ballSize;
-    private Transform ballTransform;
-    private SpriteRenderer ballSprite;
 
     private void Awake()
     {
