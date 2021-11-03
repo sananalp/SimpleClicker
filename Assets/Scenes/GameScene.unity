@@ -488,9 +488,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e5fe895d32ca3744b32727614a2ce25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ballPrefab: {fileID: 4784525691202031856, guid: 10e386f1ccd72d941b925f7779b7aadd, type: 3}
-  spawnParent: {fileID: 1592669126}
-  ballSpawnCount: 0
+  spawnManager: {fileID: 1592669127}
   spawnOffset: 5
   scoreText: {fileID: 640863356}
   restartButton: {fileID: 239930644}
@@ -918,6 +916,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1592669126}
+  - component: {fileID: 1592669127}
   m_Layer: 0
   m_Name: Balls
   m_TagString: Untagged
@@ -939,6 +938,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1592669127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1592669125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2505ef3e1c7290841a9163b72f28f46f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetBall: {fileID: 0}
+  ballPrefab: {fileID: 4784525691202031856, guid: 10e386f1ccd72d941b925f7779b7aadd, type: 3}
+  spawnParent: {fileID: 1592669126}
+  spawnCount: 1
+  liveBalls: []
+  deadBalls: []
 --- !u!1 &1603671725
 GameObject:
   m_ObjectHideFlags: 0

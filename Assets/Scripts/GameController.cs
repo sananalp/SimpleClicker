@@ -5,16 +5,12 @@ using UnityEngine.UI;
 public class GameController : MonoBehaviour
 {
     [Header("Player properties")]
-    private int score;
-    private bool checkPlay;
+    [HideInInspector] private int score;
 
     [Header("Game Managers")]
-    private SpawnManager spawnManager;
+    [SerializeField] private SpawnManager spawnManager;
 
     [Header("Spawn properties")]
-    [SerializeField] private GameObject ballPrefab;
-    [SerializeField] private Transform spawnParent;
-    [SerializeField] private int ballSpawnCount;
     [SerializeField] private float spawnOffset;
 
     [Header("UI elements")]
@@ -28,36 +24,36 @@ public class GameController : MonoBehaviour
     [Header("VFX Elements")]
     [SerializeField] private ParticleSystem ballPopParticle;
 
-    private void Start()
-    {
-        spawnManager = gameObject.AddComponent<SpawnManager>();
-    }
-
     private void Update()
     {
-        if (spawnManager.liveBalls.Count == 0 && checkPlay)
+        if (spawnManager.targetBall != null && spawnManager.targetBall.currentSize > spawnManager.targetBall.popSize)
+            GameOver();
+    }
+
+    public void PopBall(Ball bubbleBall)
+    {
+        spawnManager.deadBalls.Add(bubbleBall);
+        spawnManager.liveBalls.Remove(bubbleBall);
+        bubbleBall.gameObject.SetActive(false);
+
+        if (spawnManager.liveBalls.Count == 0)
         {
             NextLevel();
-            spawnManager.BallSpawn(ballPrefab, spawnParent, ballSpawnCount);
+            spawnManager.BallSpawn();
         }
 
-        else if (BubbleBall.SizeOut)
-        {
-            GameOver();
-        }
+        spawnManager.targetBall = spawnManager.FindFastBall();
     }
-    public void PopEffect(BubbleBall ball)
+    public void PopEffect(Ball bubbleBall)
     {
-        var particle = Instantiate(ballPopParticle, ball.transform.position, Quaternion.identity);
+        var particle = Instantiate(ballPopParticle, bubbleBall.transform.position, Quaternion.identity);
         var particleMain = particle.main;
-        particleMain.startColor = ball.Color;
+        particleMain.startColor = bubbleBall.color;
+        particle.transform.localScale = bubbleBall.size;
         particle.Play();
     }
-    public void PopBall(BubbleBall ball)
+    public void PopSound()
     {
-        spawnManager.deadBalls.Add(ball);
-        spawnManager.liveBalls.Remove(ball);
-        ball.gameObject.SetActive(false);
         ballPopSound.Play();
     }
     public void AddScore()
@@ -71,41 +67,38 @@ public class GameController : MonoBehaviour
     }
     public void Restart()
     {
-        checkPlay = true;
         restartButton.gameObject.SetActive(false);
         score = 0;
-        ballSpawnCount = 0;
+        spawnManager.spawnCount = 1;
         ShowScore();
+        spawnManager.BallSpawn();
     }
     public void Play()
     {
-        checkPlay = true;
         scoreText.gameObject.SetActive(true);
         playButton.gameObject.SetActive(false);
-        spawnManager.BallSpawn(ballPrefab, spawnParent, ballSpawnCount);
         spawnManager.ScreenAlign(spawnOffset);
+        spawnManager.BallSpawn();
     }
 
     private void NextLevel()
     {
-        ballSpawnCount++;
+        spawnManager.spawnCount++;
         DestroyAllObjects(spawnManager.deadBalls);
     }
     private void GameOver()
     {
-        checkPlay = false;
-        BubbleBall.SizeOut = false;
         scoreText.resizeTextMaxSize = 80;
         scoreText.text = $"Game Over!\nYour score: {score}";
         restartButton.gameObject.SetActive(true);
         DestroyAllObjects(spawnManager.liveBalls);
         DestroyAllObjects(spawnManager.deadBalls);
     }
-    private void DestroyAllObjects(List<BubbleBall> list)
+    private void DestroyAllObjects(List<Ball> list)
     {
-        foreach (BubbleBall ball in list)
+        foreach (Ball bubbleBall in list)
         {
-            Destroy(ball.gameObject);
+            Destroy(bubbleBall.gameObject);
         }
         list.Clear();
     }

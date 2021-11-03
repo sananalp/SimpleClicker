@@ -17,10 +17,11 @@ public class Player : MonoBehaviour
         var ray = playerCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit) && hit.collider.TryGetComponent(out BubbleBall ball))
+        if (Physics.Raycast(ray, out hit) && hit.collider.TryGetComponent(out Ball ball))
         {
             gameController.PopBall(ball);
             gameController.PopEffect(ball);
+            gameController.PopSound();
             gameController.AddScore();
             gameController.ShowScore();
         }
