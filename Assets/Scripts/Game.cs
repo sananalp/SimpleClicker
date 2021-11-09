@@ -2,21 +2,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameController : MonoBehaviour
+public class Game : MonoBehaviour
 {
     [Header("Player properties")]
     [HideInInspector] private int score;
 
     [Header("Game Managers")]
     [SerializeField] private SpawnManager spawnManager;
-
-    [Header("Spawn properties")]
-    [SerializeField] private float spawnOffset;
+    [SerializeField] private UIAnimator animator;
 
     [Header("UI elements")]
     [SerializeField] private Text scoreText;
-    [SerializeField] private Button restartButton;
-    [SerializeField] private Button playButton;
 
     [Header("Audio elements")]
     [SerializeField] private AudioSource ballPopSound;
@@ -24,6 +20,10 @@ public class GameController : MonoBehaviour
     [Header("VFX Elements")]
     [SerializeField] private ParticleSystem ballPopParticle;
 
+    private void Start()
+    {
+        animator.PlayButtonEnableAnim();
+    }
     private void Update()
     {
         if (spawnManager.targetBall != null && spawnManager.targetBall.currentSize > spawnManager.targetBall.popSize)
@@ -67,20 +67,24 @@ public class GameController : MonoBehaviour
     }
     public void Restart()
     {
-        restartButton.gameObject.SetActive(false);
         score = 0;
         spawnManager.spawnCount = 1;
         ShowScore();
         spawnManager.BallSpawn();
+        animator.ScoreTextEnableAnim();
+        animator.RestartButtonDisableAnim();
     }
     public void Play()
     {
-        scoreText.gameObject.SetActive(true);
-        playButton.gameObject.SetActive(false);
-        spawnManager.ScreenAlign(spawnOffset);
-        spawnManager.BallSpawn();
+        animator.ChoosePageEnableAnim();
+        animator.PlayButtonDisableAnim();
     }
-
+    public void WaveModePlay()
+    {
+        spawnManager.BallSpawn();
+        animator.ScoreTextEnableAnim();
+        animator.ChoosePageDisableAnim();
+    }
     private void NextLevel()
     {
         spawnManager.spawnCount++;
@@ -88,9 +92,9 @@ public class GameController : MonoBehaviour
     }
     private void GameOver()
     {
+        animator.RestartButtonEnableAnim();
         scoreText.resizeTextMaxSize = 80;
         scoreText.text = $"Game Over!\nYour score: {score}";
-        restartButton.gameObject.SetActive(true);
         DestroyAllObjects(spawnManager.liveBalls);
         DestroyAllObjects(spawnManager.deadBalls);
     }
